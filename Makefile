@@ -1,0 +1,53 @@
+# Game Of Life
+NAME			=	game-of-life
+
+SRC				=	src/main.cpp
+
+OBJS			= $(SRC:.cpp=.o)
+
+# Compiler
+CXX				=	c++
+RM				=	rm -f
+CXXFLAGS		=	-Wall -Werror -Wextra -std=c++11 #  -g3 -fsanitize=address
+MLX_FLAGS	=	-Iinclude -ldl -lglfw -pthread -lm
+
+# MLX42
+MLX				=	$(MLX_SRC)/build/libmlx42.a
+MLX_SRC			=	./MLX42
+
+# Colours
+RED				=	\033[0;31m
+GREEN			=	\033[0;32m
+YELLOW			=	\033[0;33m
+BLUE			=	\033[0;34m
+PURPLE			=	\033[0;35m
+CYAN			=	\033[0;36m
+WHITE			=	\033[0;37m
+RESET			=	\033[0m
+
+# Rules
+all:		$(MLX) $(NAME)
+			@printf "$(BLUE)==> $(CYAN)$(NAME) compiled ✅\n\n$(RESET)"
+
+$(NAME):	$(OBJS)
+			@$(CXX) $(CXXFLAGS) $(OBJS) $(MLX) $(MLX_FLAGS) -o $(NAME)
+
+$(MLX):
+			@git submodule init
+			@git submodule update
+			@printf "$(BLUE)==> $(CYAN)Building MLX42 library... 🔧$(RESET)\n"
+			@cmake -B $(MLX_SRC)/build -S $(MLX_SRC)
+			@cmake --build $(MLX_SRC)/build -j4
+
+clean:
+			@$(RM) $(OBJS)
+			@printf "\n$(BLUE)==> $(RED)Removed $(NAME) 🗑️\n$(RESET)"
+
+fclean:		clean
+			@$(RM) game_history.txt
+			@$(RM) $(NAME)
+
+re:			fclean all
+			@printf "$(BLUE)==> $(CYAN)$(NAME) recompiled 🔄\n$(RESET)"
+
+.PHONY:		all clean fclean re
