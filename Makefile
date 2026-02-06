@@ -1,14 +1,16 @@
 # Game Of Life
 NAME			=	game-of-life
 
-SRC				=	src/main.cpp
+SRC				=	src/main.cpp \
+					src/classes/GameLogic.cpp \
+					src/classes/Screen.cpp
 
 OBJS			= $(SRC:.cpp=.o)
 
 # Compiler
 CXX				=	c++
 RM				=	rm -f
-CXXFLAGS		=	-Wall -Werror -Wextra -std=c++11 #  -g3 -fsanitize=address
+CXXFLAGS		=	-Wall -Werror -Wextra -std=c++11 -g3 -fsanitize=address
 MLX_FLAGS	=	-Iinclude -ldl -lglfw -pthread -lm
 
 # MLX42
@@ -44,7 +46,6 @@ clean:
 			@printf "\n$(BLUE)==> $(RED)Removed $(NAME) 🗑️\n$(RESET)"
 
 fclean:		clean
-			@$(RM) game_history.txt
 			@$(RM) $(NAME)
 
 re:			fclean all
