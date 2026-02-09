@@ -12,19 +12,23 @@ GameLogic::~GameLogic()
 	delete this->screen;
 }
 
-void GameLogic::startGame()
+GameLogic::GameLogic(const GameLogic &copy)
 {
-	// Set up the mouse callback
-	mlx_mouse_hook(this->screen->getMLX(), &GameLogic::mouseButtonCallback, this);
+	*this = copy;
+}
 
-	// Set up the key callback for switching players
-	mlx_key_hook(this->screen->getMLX(), &GameLogic::keyPressCallback, this);
+GameLogic &GameLogic::operator=(const GameLogic &assign)
+{
+	if (this != &assign)
+	{
+		this->screen = assign.screen;
+	}
+	return *this;
+}
 
-	// Draw the initial board
-	this->screen->drawBoard();
-
-	// Start the main loop
-	mlx_loop(this->screen->getMLX());
+Screen *GameLogic::getScreen() const
+{
+	return this->screen;
 }
 
 /* Callbacks */
@@ -50,4 +54,27 @@ void GameLogic::keyPressCallback(mlx_key_data_t keydata, void *param)
 		std::cout << "Exiting..." << std::endl;
 		mlx_close_window(game->screen->getMLX());
 	}
+}
+
+void render_next_frame(void *param)
+{
+	GameLogic *game = static_cast<GameLogic *>(param);
+	game->getScreen()->drawGrid();
+}
+
+void GameLogic::startGame()
+{
+	// Set up the mouse callback
+	mlx_mouse_hook(this->screen->getMLX(), &GameLogic::mouseButtonCallback, this);
+
+	// Set up the key callback for switching players
+	mlx_key_hook(this->screen->getMLX(), &GameLogic::keyPressCallback, this);
+
+	// Draw the initial board
+	this->screen->drawBoard();
+
+	mlx_loop_hook(this->screen->getMLX(), render_next_frame, this);
+
+	// Start the main loop
+	mlx_loop(this->screen->getMLX());
 }

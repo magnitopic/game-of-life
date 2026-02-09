@@ -20,6 +20,8 @@ public:
 	GameLogic &operator=(const GameLogic &assign);
 	~GameLogic();
 
+	Screen *getScreen() const;
+
 	// Game methods
 	void startGame();
 };

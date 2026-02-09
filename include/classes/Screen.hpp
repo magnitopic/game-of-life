@@ -10,6 +10,9 @@ private:
 	mlx_t *mlx;
 	static void keyCallback(mlx_key_data_t keydata, void *param);
 
+	int displace_x;
+	int displace_y;
+
 public:
 	Screen();
 	Screen(const Screen &copy);
@@ -21,6 +24,9 @@ public:
 
 	// Draw methods
 	void drawBoard();
+	void drawGrid();
+	void drawSquare(mlx_image_t *img, int x, int y, int size, bool filled);
+	void drawLine(mlx_image_t *img, int height, int width, int x, int y);
 };
 
 #endif
