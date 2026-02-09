@@ -13,7 +13,8 @@ private:
 	static void mouseButtonCallback(mouse_key_t button, action_t action, modifier_key_t mods, void *param);
 	// Key event handling
 	static void keyPressCallback(mlx_key_data_t keydata, void *param);
-
+	//
+	static void mouseScrollCallback(double xdelta, double ydelta, void* param);
 public:
 	GameLogic();
 	GameLogic(const GameLogic &copy);

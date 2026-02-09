@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#define SCREEN_SIZE 920
+#define SCREEN_SIZE 2080
 #define BOARD_SIZE 19
 #define MARGIN 90
 

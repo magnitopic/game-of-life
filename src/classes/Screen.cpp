@@ -10,6 +10,9 @@ Screen::Screen()
 		fprintf(stderr, "%s", mlx_strerror(mlx_errno));
 		exit(EXIT_FAILURE);
 	}
+	this->displace_x = 0;
+	this->displace_y = 0;
+	this->zoom = 100;
 }
 
 Screen::Screen(const Screen &copy)
@@ -22,6 +25,9 @@ Screen &Screen::operator=(const Screen &assign)
 	if (this != &assign)
 	{
 		this->mlx = assign.mlx;
+		this->displace_x = assign.displace_x;
+		this->displace_y = assign.displace_y;
+		this->zoom = assign.zoom;
 	}
 	return *this;
 }
@@ -32,14 +38,28 @@ Screen::~Screen()
 		mlx_terminate(this->mlx);
 }
 
-/* Getters */
+/* Setters & Getters */
 
 mlx_t *Screen::getMLX() const
 {
 	return this->mlx;
 }
 
+int Screen::getZoom()
+{
+	return this->zoom;
+}
+
 /* Draw methods */
+void Screen::changeZoomBy(int newZoom)
+{
+	if (this->zoom + newZoom < 40)
+		return;
+	else if (this->zoom + newZoom > 100)
+		return;
+
+	this->zoom = zoom + newZoom;
+}
 
 void Screen::drawBoard()
 {
@@ -59,17 +79,12 @@ void Screen::drawBoard()
 void Screen::drawLine(mlx_image_t *img, int height, int width, int x, int y)
 {
 	for (int i = 0; i < height; ++i)
-	{
 		for (int j = 0; j < width; ++j)
-		{
 			mlx_put_pixel(img, x + j, y + i, WHITE);
-		}
-	}
 }
 
 void Screen::drawSquare(mlx_image_t *img, int x, int y, int size, bool filled)
 {
-	std::cout <<"val:" <<x << ", " << y << std::endl;
 	this->drawLine(img, 2, size, x, y);
 	this->drawLine(img, size, 2, y, x);
 	this->drawLine(img, 2, size, x, y + size - 2);
@@ -87,18 +102,22 @@ void Screen::drawGrid()
 		return;
 	}
 
-	int cell_size = (SCREEN_SIZE - 2) / (BOARD_SIZE - 1);
-	for (int i = 0; i < BOARD_SIZE - 1; i++)
+	for (uint32_t i = 0; i < img->width * img->height; ++i)
+		((uint32_t *)img->pixels)[i] = BLACK;
+
+
+	std::cout << this->zoom << std::endl;
+	int cell_size = ((SCREEN_SIZE - 2) * this->zoom) / (100 * (BOARD_SIZE - 1));
+	int n_cells = SCREEN_SIZE / cell_size;
+	for (int i = 0; i < n_cells; i++)
 	{
-		for (int j = 0; j < BOARD_SIZE - 1; j++)
+		for (int j = 0; j < n_cells; j++)
 		{
-			std::cout << "Drawing square at (" << i << ", " << j << ")\n";
 			int x = i * cell_size;
 			int y = j * cell_size;
 			this->drawSquare(img, x, y, cell_size, false);
 		}
 	}
-	/* this->drawSquare(img, 55, 55, 50, true); */
 
 	mlx_image_to_window(this->mlx, img, 0, 0);
 }

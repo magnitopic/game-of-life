@@ -12,6 +12,7 @@ private:
 
 	int displace_x;
 	int displace_y;
+	int zoom;
 
 public:
 	Screen();
@@ -21,12 +22,14 @@ public:
 
 	// Getters
 	mlx_t *getMLX() const;
-
+	int getZoom();
+	
 	// Draw methods
 	void drawBoard();
 	void drawGrid();
 	void drawSquare(mlx_image_t *img, int x, int y, int size, bool filled);
 	void drawLine(mlx_image_t *img, int height, int width, int x, int y);
+	void changeZoomBy(int newZoom);
 };
 
 #endif

@@ -42,6 +42,8 @@ void GameLogic::mouseButtonCallback(mouse_key_t button, action_t action, modifie
 		int xpos, ypos;
 		mlx_get_mouse_pos(game->screen->getMLX(), &xpos, &ypos);
 	}
+	std::cout << action << std::endl;
+	;
 }
 
 void GameLogic::keyPressCallback(mlx_key_data_t keydata, void *param)
@@ -55,6 +57,16 @@ void GameLogic::keyPressCallback(mlx_key_data_t keydata, void *param)
 		mlx_close_window(game->screen->getMLX());
 	}
 }
+
+void GameLogic::mouseScrollCallback(double xdelta, double ydelta, void *param)
+{
+	GameLogic *game = static_cast<GameLogic *>(param);
+	(void)xdelta;
+
+	game->getScreen()->changeZoomBy(ydelta);
+}
+
+/* Game methods */
 
 void render_next_frame(void *param)
 {
@@ -72,6 +84,8 @@ void GameLogic::startGame()
 
 	// Draw the initial board
 	this->screen->drawBoard();
+
+	mlx_scroll_hook(this->screen->getMLX(), &GameLogic::mouseScrollCallback, this);
 
 	mlx_loop_hook(this->screen->getMLX(), render_next_frame, this);
 
