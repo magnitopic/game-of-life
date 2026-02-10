@@ -3,9 +3,8 @@
 
 #include <iostream>
 
-#define SCREEN_SIZE 2080
+#define SCREEN_SIZE 920
 #define BOARD_SIZE 19
-#define MARGIN 90
 
 // Colors
 const int BLACK = 0xFF000000;

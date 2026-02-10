@@ -4,7 +4,7 @@
 Screen::Screen()
 {
 	mlx_set_setting(MLX_MAXIMIZED, false);
-	this->mlx = mlx_init(SCREEN_SIZE, SCREEN_SIZE, "Gomoku", false);
+	this->mlx = mlx_init(SCREEN_SIZE, SCREEN_SIZE, "Game of Life", false);
 	if (!this->mlx)
 	{
 		fprintf(stderr, "%s", mlx_strerror(mlx_errno));
@@ -104,7 +104,6 @@ void Screen::drawGrid()
 
 	for (uint32_t i = 0; i < img->width * img->height; ++i)
 		((uint32_t *)img->pixels)[i] = BLACK;
-
 
 	std::cout << this->zoom << std::endl;
 	int cell_size = ((SCREEN_SIZE - 2) * this->zoom) / (100 * (BOARD_SIZE - 1));
